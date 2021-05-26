@@ -10,7 +10,8 @@ import static org.apache.spark.sql.functions.*;
 public class test {
     public static void main(String[] args) {
         SparkSession spark = SparkSession.builder().master("local").getOrCreate();
-        //read file
+        
+        // read file
         Dataset<Row> nYTaxiDataset = spark.read().option("header", "true").csv("F:\\truonghv\\dataTest");
 
         // creat column HOUR of pickup time
