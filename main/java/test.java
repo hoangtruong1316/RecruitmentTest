@@ -10,9 +10,34 @@ import static org.apache.spark.sql.functions.*;
 public class test {
     public static void main(String[] args) {
         SparkSession spark = SparkSession.builder().master("local").getOrCreate();
-        
+ 
         // read file
         Dataset<Row> nYTaxiDataset = spark.read().option("header", "true").csv("F:\\truonghv\\dataTest");
+
+        //reformat data type
+        nYTaxiDataset = nYTaxiDataset
+                .select(
+                        col("VendorID").cast(DataTypes.IntegerType),
+                        col("lpep_pickup_datetime").cast(DataTypes.TimestampType),
+                        col("Lpep_dropoff_datetime").cast(DataTypes.TimestampType),
+                        col("Store_and_fwd_flag").cast(DataTypes.StringType),
+                        col("RateCodeID").cast(DataTypes.IntegerType),
+                        col("Pickup_longitude").cast(new DecimalType(20, 15)),
+                        col("Pickup_latitude").cast(new DecimalType(20, 15)),
+                        col("Dropoff_longitude").cast(new DecimalType(20, 15)),
+                        col("Dropoff_latitude").cast(new DecimalType(20, 15)),
+                        col("Passenger_count").cast(DataTypes.IntegerType),
+                        col("Trip_distance").cast(DataTypes.FloatType),
+                        col("Fare_amount").cast(DataTypes.FloatType),
+                        col("Extra").cast(DataTypes.FloatType),
+                        col("MTA_tax").cast(DataTypes.FloatType),
+                        col("Tip_amount").cast(DataTypes.FloatType),
+                        col("Tolls_amount").cast(DataTypes.FloatType),
+                        col("Ehail_fee").cast(DataTypes.FloatType),
+                        col("Total_amount").cast(DataTypes.FloatType),
+                        col("Payment_type").cast(DataTypes.IntegerType),
+                        col("Trip_type ").cast(DataTypes.StringType).alias("Trip_type")
+                );
 
         // creat column HOUR of pickup time
         nYTaxiDataset = nYTaxiDataset.withColumn("PICKUP_HOUR", hour(col("lpep_pickup_datetime")));
@@ -57,31 +82,6 @@ public class test {
                 );
         /*nYTaxiDataset.printSchema();
         nYTaxiDataset.show(10, false);*/
-
-        //reformat data type
-        nYTaxiDataset = nYTaxiDataset
-                .select(
-                        col("VendorID").cast(DataTypes.IntegerType),
-                        col("lpep_pickup_datetime").cast(DataTypes.TimestampType),
-                        col("Lpep_dropoff_datetime").cast(DataTypes.TimestampType),
-                        col("Store_and_fwd_flag").cast(DataTypes.StringType),
-                        col("RateCodeID").cast(DataTypes.IntegerType),
-                        col("Pickup_longitude").cast(new DecimalType(20, 15)),
-                        col("Pickup_latitude").cast(new DecimalType(20, 15)),
-                        col("Dropoff_longitude").cast(new DecimalType(20, 15)),
-                        col("Dropoff_latitude").cast(new DecimalType(20, 15)),
-                        col("Passenger_count").cast(DataTypes.IntegerType),
-                        col("Trip_distance").cast(DataTypes.FloatType),
-                        col("Fare_amount").cast(DataTypes.FloatType),
-                        col("Extra").cast(DataTypes.FloatType),
-                        col("MTA_tax").cast(DataTypes.FloatType),
-                        col("Tip_amount").cast(DataTypes.FloatType),
-                        col("Tolls_amount").cast(DataTypes.FloatType),
-                        col("Ehail_fee").cast(DataTypes.FloatType),
-                        col("Total_amount").cast(DataTypes.FloatType),
-                        col("Payment_type").cast(DataTypes.IntegerType),
-                        col("Trip_type ").cast(DataTypes.StringType).alias("Trip_type")
-                );
 
         // save result
         nYTaxiDataset.coalesce(1).write().mode(SaveMode.Overwrite).option("header", "true").csv("F:\\truonghv\\csv_result");
