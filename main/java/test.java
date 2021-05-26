@@ -23,7 +23,6 @@ public class test {
             nYTaxiDataset = nYTaxiDataset.withColumn("HOUR_" + h, when(col("PICKUP_HOUR").equalTo(h), 1).otherwise(0));
         }
 
-
         // one-hot encoding for each day of the week
         for(int dow =1; dow<8; dow++){
             nYTaxiDataset = nYTaxiDataset.withColumn("DAY_OF_WEEK" + dow, when(col("DAY_OF_WEEK").equalTo(dow), 1).otherwise(0));
@@ -55,8 +54,8 @@ public class test {
                                 1
                         ).otherwise(0)
                 );
-        nYTaxiDataset.printSchema();
-        nYTaxiDataset.show(10, false);
+        /*nYTaxiDataset.printSchema();
+        nYTaxiDataset.show(10, false);*/
 
         //reformat data type
         nYTaxiDataset = nYTaxiDataset
@@ -89,5 +88,4 @@ public class test {
         spark.sparkContext().setLogLevel("WARN");
         spark.close();
     }
-
 }
